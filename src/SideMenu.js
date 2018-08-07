@@ -126,11 +126,20 @@ class SideMenu extends Component {
         })
   }
 
+  picDescriptionCheck = (description, callingId) => {
+    if (description !== null) {
+      return description
+    } else {
+      let theVenue = this.state.searchResults.filter(aRes => { return aRes.venue.id !== callingId })
+      return theVenue[0].venue.name
+    }
+  }
+
   imageResponseHandler = (picturesData, callingId) => {
     let picturesToRender = {}
     if (picturesData.results !== undefined && picturesData.results.length > 0) {
       picturesToRender.aPicture = picturesData.results.map(picInfo => {
-          return <img key={picInfo.id} tabIndex="0" className="searchPicThumb" src={`${picInfo.urls.regular}`} alt={`${picInfo.description}`}
+          return <img key={picInfo.id} tabIndex="0" className="searchPicThumb" src={`${picInfo.urls.regular}`} alt={this.picDescriptionCheck(picInfo.description, callingId)}
                       onClick={() => {this.props.onOpenPictureModal(picInfo.urls.regular)}}
                       onKeyPress={(event) => { if (this.props.onKeyPressValidate(event)) {this.props.onOpenPictureModal(picInfo.urls.regular);} }}/>
         })

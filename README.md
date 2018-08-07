@@ -25,7 +25,7 @@
  + Upon click on any picture, an enlarged version of the clicked picture is being shown within a _modal_.
  + Keyframe animations allow smooth appearance of modals, as well as color glow effects etc.
  + While new venues are being searched, a loading screen is being shown, all errors are being handled gracefully.
- + The application utilizes cache-first service worker of React.
+ + The application utilizes cache-first service worker of React. Please click [here](https://goo.gl/KwvDNy) to learn more about the service worker and follow [these instructions](https://github.com/facebookincubator/create-react-app/issues/2374) to avoid any complications. 
  + Complete flexibility across all known screen sizes.
 
  ## Installation and use:

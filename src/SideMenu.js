@@ -45,11 +45,16 @@ class SideMenu extends Component {
   listOfPlacesToDisplay = () => {
     let theList =  this.props.placesToFilter.map(place => {
                         if (place.filterVisibility === true) {
-                            return <li className="singleVenueContainer" tabIndex="5" key={place.id} >
-                                    <span className="filterVenueName" tabIndex="6" onClick={ () => this.props.onChangeInfoBoxVisible(place)}>{place.name}</span>
+                            return <li className="singleVenueContainer" tabIndex="0" key={place.id} >
+                                    <span className="filterVenueName" tabIndex="0" role="button"
+                                          onKeyPress={(event) => { if (this.props.onKeyPressValidate(event)) {this.props.onChangeInfoBoxVisible(place);} }}
+                                          onClick={ () => this.props.onChangeInfoBoxVisible(place)}>{place.name}
+                                    </span>
                                     {place.tips.groups[0].items.length > 0 &&  <span className="venueText">, tips for visitors:</span>}
                                     {place.tips.groups[0].items.map(item => { return <p className="venueText" key={item.id}>{item.text}</p> })}
-                                    <span onClick={() => this.props.onRemoveVenue(place)} tabIndex="7" role="button" className="addButton">Remove venue</span></li>
+                                    <span onClick={() => this.props.onRemoveVenue(place)} onKeyPress={(event) => { if (this.props.onKeyPressValidate(event)) {this.props.onRemoveVenue(place);} }}
+                                          tabIndex="0" role="button" className="addButton">Remove venue</span>
+                                    </li>
                         } else {
                             return null
                         }
@@ -82,6 +87,8 @@ class SideMenu extends Component {
     }
     let searchErrorHandler = (er) => {
       alert(`Could not get search results from foursquare, please give it another try later.`)
+      this.setState({ loadingStatus: false })
+      this.setState({ defaultSearchMessage: true })
       this.searchResponseHandler(er)
     }
     this.setState({ picturesToShow: [] })
@@ -123,7 +130,9 @@ class SideMenu extends Component {
     let picturesToRender = {}
     if (picturesData.results !== undefined && picturesData.results.length > 0) {
       picturesToRender.aPicture = picturesData.results.map(picInfo => {
-          return <img key={picInfo.id} className="searchPicThumb" src={`${picInfo.urls.regular}`} alt={`${picInfo.description}`} onClick={() => {this.props.onOpenPictureModal(picInfo.urls.regular)}}/>
+          return <img key={picInfo.id} tabIndex="0" className="searchPicThumb" src={`${picInfo.urls.regular}`} alt={`${picInfo.description}`}
+                      onClick={() => {this.props.onOpenPictureModal(picInfo.urls.regular)}}
+                      onKeyPress={(event) => { if (this.props.onKeyPressValidate(event)) {this.props.onOpenPictureModal(picInfo.urls.regular);} }}/>
         })
       picturesToRender.callingId = callingId
     } else {
@@ -173,34 +182,38 @@ class SideMenu extends Component {
   }
 
   render() {
-    const { filterTopVisibility, searchTopVisibility, onFetchById } = this.props
+    const { filterTopVisibility, searchTopVisibility, onFetchById, onFetchByIdError, onStartVenues, onKeyPressValidate } = this.props
     const { queryFilter, querySearch, searchResults, searchResultsReady, loadingStatus, defaultSearchMessage } = this.state
 
     return (
       <div>
         {filterTopVisibility === true && (
           <div className="sideMenu">
-            <input className="filterBar" tabIndex="3" type="text" name="filter" placeholder="Filter my venues" value={queryFilter} onChange={(event) => this.updateFilterQuery(event.target.value)}/>
+            <input className="filterBar" tabIndex="0" type="text" name="filter" placeholder="Filter my venues" value={queryFilter} onChange={(event) => this.updateFilterQuery(event.target.value)}/>
             <ul className="resultsContainer">
+              {onFetchByIdError === true &&
+                <li className="errorClicker" tabIndex="0" role="button" onKeyPress={(event) => { if (onKeyPressValidate(event)) {onStartVenues();} }} onClick={onStartVenues}>Try again</li> }
               {this.listOfPlacesToDisplay()}
             </ul>
           </div>
         )}
         {searchTopVisibility === true && (
           <div className="sideMenu">
-            <input className="searchBar" tabIndex="3" type="text" name="search" placeholder="Search for new venues" value={querySearch}
+            <input className="searchBar" tabIndex="0" type="text" name="search" placeholder="Search for new venues" value={querySearch}
                    onChange={(event) => this.updateSearchQuery(event.target.value)} onKeyPress={this.keyEnterValidate}/>
-            <div className="searchSubmitButton" tabIndex="4" onClick={this.getSearchInfo}>Search</div>
+            <div className="searchSubmitButton" tabIndex="0" role="button" onClick={this.getSearchInfo} onKeyPress={(event) => { if (onKeyPressValidate(event)) {this.getSearchInfo();} }}>Search</div>
             <ul className="resultsContainer">
                {loadingStatus === true && <img className="loadingImage" src={loading} alt={`loading`}/>}
                {defaultSearchMessage === true && <span className="searchMessage">Search for venues in the focused area of the map</span> }
                {searchResultsReady === true && searchResults.map(resultItem => {
                  if (resultItem.resVisibility === true) {
-                   return  <li className="singleVenueContainer" tabIndex="5" key={resultItem.venue.id}>
+                   return  <li className="singleVenueContainer" tabIndex="0" key={resultItem.venue.id}>
                                 <span className="searchVenueName">{resultItem.venue.name}</span>
                                 <p className="venueText">{resultItem.venue.location.formattedAddress.join(" ")}</p>
                                 <div className="searchPhotoContainer">{this.getSearchImagesById(resultItem.venue.id).map(aPh => { return aPh; })}</div>
-                                <span onClick={() => { onFetchById(resultItem.venue.id); this.searchResultsUpdate(resultItem) }} tabIndex="6" role="button" className="addButton">Add to my venues</span>
+                                <span onClick={() => { onFetchById(resultItem.venue.id); this.searchResultsUpdate(resultItem) }}
+                                      onKeyPress={(event) => { if (onKeyPressValidate(event)) {onFetchById(resultItem.venue.id); this.searchResultsUpdate(resultItem);} }}
+                                      role="button" tabIndex="0" className="addButton">Add to my venues</span>
                            </li>
                  } else {
                    return null

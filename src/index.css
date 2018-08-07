@@ -69,6 +69,7 @@ body {
     animation-name: enlarge;
     padding-top: 3%;
     padding-left: 27%;
+    cursor: pointer;
     width: 70%;
 }
 
@@ -163,7 +164,7 @@ body {
   height: 5.9%;
 }
 
-.filterButton, .searchButton, .searchMessage, .credits {
+.filterButton, .searchButton, .searchMessage, .credits, .errorClicker {
   font-weight: bold;
   position: absolute;
   z-index: 5;
@@ -180,6 +181,10 @@ body {
   -webkit-text-fill-color:transparent;
   animation: backgroundEthereal 15s linear infinite;
   font-family: Georgia, Helvetica, Arial;
+}
+
+.errorClicker {
+  margin: 10vh;
 }
 
 .searchMessage {

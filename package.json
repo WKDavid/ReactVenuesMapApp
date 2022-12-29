@@ -8,8 +8,8 @@
     "react-dom": "^16.4.1",
     "react-focus-trap": "^2.6.0",
     "react-google-maps": "^9.4.5",
-    "react-locky": "^1.4.1",
-    "react-scripts": "1.1.4",
+    "react-locky": "^1.5.7",
+    "react-scripts": "5.0.1",
     "request": "^2.87.0"
   },
   "scripts": {
